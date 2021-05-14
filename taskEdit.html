@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>任务设置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="./lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="./css/public.css" media="all">
+    <style>
+        .layui-form-item .layui-input-company {
+            width: auto;
+            padding-right: 10px;
+            line-height: 38px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layuimini-container">
+        <div class="layuimini-main">
+
+            <div class="layui-form layuimini-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">任务名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="sitename" lay-verify="required" lay-reqtext="任务名称不能为空" placeholder="请输入任务名称" value="KEG实验室项目" class="layui-input">
+                        <tip>填写任务名称</tip>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">任务组长</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="domain" lay-verify="required" lay-reqtext="任务组长不能为空" placeholder="请输入任务组长" value="KEG实验室" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">组长性别</label>
+                    <div class="layui-input-inline">
+                        <input type="radio" name="sex" value="男" title="男" checked="">
+                        <input type="radio" name="sex" value="女" title="女">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">任务成员集合</label>
+                    <div class="layui-input-block">
+                        <textarea name="title" class="layui-textarea">王成龙，张翰允..</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">任务具体描述</label>
+                    <div class="layui-input-block">
+                        <textarea name="descript" class="layui-textarea">简要描述任务具体信息</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">任务成员联系方式</label>
+                    <div class="layui-input-block">
+                        <textarea name="descript" class="layui-textarea">手机：13737511267</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">任务创建时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="date" id="date1" lay-verify="required" lay-reqtext="任务创建时间不能为空" class="layui-input">
+                    </div>
+                </div>
+                <!--
+                    <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label required">任务状态</label>
+                    <div class="layui-input-block">
+                        <textarea name="keywords" class="layui-textarea" placeholder="待创建|已开始|已完成"></textarea>
+                    </div>
+                </div>
+                -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">任务状态</label>
+                    <div class="layui-input-block">
+                        <select name="interest" lay-filter="aihao">
+                            <option value=""></option>
+                            <option value="0">未开始</option>
+                            <option value="1" selected="">进行中</option>
+                            <option value="2">待验收</option>
+                            <option value="3">验收完成</option>
+                            <option value="4">已结束</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label required">其他信息</label>
+                    <div class="layui-input-block">
+                        <textarea name="copyright" class="layui-textarea">若无其他信息，则不填</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">复选框</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="like[write]" title="普通">
+                        <input type="checkbox" name="like[read]" title="涉密">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="setting">确认保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script>
+        layui.use(['form'], function() {
+            var form = layui.form,
+                layer = layui.layer;
+
+            //监听提交
+            form.on('submit(setting)', function(data) {
+                parent.layer.alert(JSON.stringify(data.field), {
+                    title: '最终的提交信息'
+                });
+                return false;
+            });
+
+        });
+    </script>
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function() {
+            var form = layui.form,
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate;
+
+            //日期
+            laydate.render({
+                elem: '#date'
+            });
+            laydate.render({
+                elem: '#date1'
+            })
+        });
+    </script>
+
+</body>
+
+</html>

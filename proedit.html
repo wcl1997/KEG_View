@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>任务设置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="./lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="./css/public.css" media="all">
+    <style>
+        .layui-form-item .layui-input-company {
+            width: auto;
+            padding-right: 10px;
+            line-height: 38px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layuimini-container">
+        <div class="layuimini-main">
+                <form class="layui-form" action="" lay-filter="example">
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">项目编号</label>
+                    <div class="layui-input-block">
+                      <input type="text" name="pronum" lay-verify="title" autocomplete="off" placeholder="2021032901" class="layui-input">
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">项目名称</label>
+                    <div class="layui-input">
+                      <input type="text" name="proname" placeholder="数据库爬虫任务"  class="layui-input">
+                    </div>
+                  </div>
+                  
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">项目成员</label>
+                    <div class="layui-input-block">
+						<input type="text" name="promem" lay-verify="title" autocomplete="off" placeholder="房小涵；于凯；王成龙" class="layui-input">
+                    </div>
+                  </div>
+				
+				  
+			    <div class="layui-inline">
+			      <label class="layui-form-label">创建时间</label>
+			      <div class="layui-input-inline">
+			        <input type="text" class="layui-input" id="test5" placeholder="2021-03-29 00:12:40">
+			      </div>
+			    </div>
+				<div class="layui-inline">
+				      <label class="layui-form-label">更新时间</label>
+				      <div class="layui-input-inline">
+				        <input type="text" class="layui-input" id="test5" placeholder="2021-04-02 16:33:23">
+				      </div>
+				</div>
+                 <div class="layui-form-item">
+                   <label class="layui-form-label">状态</label>
+                   <div class="layui-input-block">
+                     <select name="interest" lay-filter="aihao">
+                       <option value="">进行中</option>
+                       <option value="0">进行中</option>
+                       <option value="1">已完成</option>
+                       <option value="2">未开始</option>
+                     </select>
+                   </div>
+                 </div>
+                  <div class="layui-form-item">
+                    <div class="layui-input-block">
+                      <button type="button" class="layui-btn layui-btn-normal" id="LAY-component-form-setval">取消</button>
+                      <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">提交</button>
+                    </div>
+                  </div>
+                </form>
+        </div>
+    </div>
+    <script src="./lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script>
+        layui.use(['form'], function() {
+            var form = layui.form,
+                layer = layui.layer;
+
+            //监听提交
+            form.on('submit(setting)', function(data) {
+                parent.layer.alert(JSON.stringify(data.field), {
+                    title: '最终的提交信息'
+                });
+                return false;
+            });
+
+        });
+    </script>
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function() {
+            var form = layui.form,
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate;
+
+            //日期
+            laydate.render({
+                elem: '#date'
+            });
+            laydate.render({
+                elem: '#date1'
+            })
+        });
+    </script>
+
+</body>
+
+</html>

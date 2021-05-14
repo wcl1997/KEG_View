@@ -1,0 +1,259 @@
+<html>
+<head>
+    <title>KEG实验室管理系统</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" th:href="./images/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <!-- 引入css -->
+    <link rel="stylesheet" href="./css/plugins/font-awesome-4.7.0/css/font-awesome.min.css"  media="all">
+    <link rel="stylesheet" href="./lib/layui-v2.3.0/css/layui.css"  media="all">
+    <link rel="stylesheet" href="./css/main.css"  media="all">
+    <link rel="stylesheet" href="./lib/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <style type="text/css">
+        .large-search-status{
+            width: 150px;
+        }
+
+        .large-search-status .large-search-select {
+            width: 150px;
+            height: 38px;
+            padding-left: 12px;
+            border-color: #e6e6e6;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="timo-layout-page">
+<div id="app">
+    <div class="layui-card">
+        <div class="layui-card-header timo-card-header">
+            <span><i class="fa fa-bars"></i> 用户管理</span>
+            <i class="layui-icon layui-icon-refresh refresh-btn"></i>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-row timo-card-screen put-row">
+                <div class="pull-left layui-form-pane timo-search-box">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-block timo-search-status">
+                            <select class="timo-search-select" name="status" v-model.number="selected" @change="selectChange()">
+                                <option value="1">正常</option>
+                                <option value="0">冻结</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">所在实验室小组</label>
+                        <div class="layui-input-block large-search-status">
+                            <select class="large-search-select" name="status" v-model="group_select" @change="selectChange()">
+                                <option :value="group.gid" v-for="group in groups" :key="group.gid">{{group.gname}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">研究方向</label>
+                        <div class="layui-input-block large-search-status">
+                            <select class="large-search-select" name="status" v-model="research_select" @change="selectChange()">
+                                <option :value="research.rid" v-for="research in researches" :key="research.rid">{{research.rname}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">关键词</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="keyword" v-model="keyword" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn" @click="selectChange()">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="pull-right screen-btn-group">
+                    <!--  <div class="btn-group-left">
+                         <button class="layui-btn open-popup-param" data-title="修改密码" data-size="456,242" data-url="#">
+                             <i class="fa fa-refresh"></i> 修改密码</button>
+                         <button class="layui-btn open-popup-param" data-type="radio" data-title="角色分配" data-size="480,400" data-url="#">
+                             <i class="fa fa-user-secret"></i> 角色分配</button>
+                     </div> -->
+                    <div class="btn-group-right">
+                        <button class="layui-btn open-popup" data-title="添加用户" data-size="600,520" data-url="popup.html">
+                            <i class="fa fa-plus"></i> 添加</button>
+                        <div class="btn-group">
+                            <button class="layui-btn">操作<span class="caret"></span></button>
+                            <dl class="layui-nav-child layui-anim layui-anim-upbit">
+                                <dd><a class="ajax-status" href="/user/status/ok">启用</a></dd>
+                                <dd><a class="ajax-status" href="/user/status/freezed">冻结</a></dd>
+                                <dd><a class="ajax-status" href="/user/status/delete">删除</a></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table class="layui-table timo-table">
+                <thead>
+                <tr>
+                    <th class="timo-table-checkbox">
+                        <label class="timo-checkbox"><input type="checkbox">
+                            <i class="layui-icon layui-icon-ok"></i></label>
+                    </th>
+                    <th>姓名</th>
+                    <th>用户名</th>
+                    <th>学号</th>
+                    <th>性别</th>
+                    <th>电话</th>
+                    <th>邮箱</th>
+                    <th>年级</th>
+                    <th>实验小组</th>
+                    <th>研究方向</th>
+                    <th>特质</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in items" :key="item.id">
+                        <td><label class="timo-checkbox"><input type="checkbox" value="1">
+                            <i class="layui-icon layui-icon-ok"></i></label></td>
+                        <td>{{item.uname}}</td>
+                        <td>{{item.uusername}}</td>
+                        <td>{{item.uid}}</td>
+                        <td v-if="item.usex">男</td>
+                        <td v-else>女</td>
+                        <td>{{item.uphone}}</td>
+                        <td>{{item.uemail}}</td>
+                        <td>{{item.ugrade}}</td>
+                        <td>{{item.group.gname}}</td>
+                        <td>{{item.research.rname}}</td>
+                        <td>{{item.utrait}}</td>
+                        <td>
+                            <a class="open-popup" data-title="编辑用户" data-size="600,570" href="#" data-url="edit.html">编辑</a>
+                            <!-- <a class="open-popup" data-title="详细信息" data-size="800,600" href="#" data-url="404.html">详细</a> -->
+                            <a class="ajax-get" href="/user/status/delete?ids=1" data-msg="您是否删除此信息">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="page" style="text-align: right; padding-right: 130px"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="./lib/layui-v2.3.0/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="./js/main.js" charset="utf-8"></script>
+<script type="text/javascript" src="./js/plugins/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="./lib/zTree_v3/js/jquery.ztree.core.min.js"></script>
+<script type="text/javascript" src="./js/timoTree.js"></script>
+<script type="text/javascript" src="./js/vue/vue.js"></script>
+<script type="text/javascript" src="./js/vue/axios.min.js"></script>
+<script type="text/javascript" src="./js/vue/http.js"></script>
+<script type="text/javascript">
+    // var local = window.localStorage;
+    // // 树形菜单
+    // $.fn.selectTree({
+    //     rootTree: '全部',
+    //     onSelected: function(treeNode){
+    //         local.setItem('deptTitle', treeNode.name);
+    //     }
+    // });
+    // $(function(){
+    //     var dept = $('.select-tree');
+    //     if(dept.attr('value').length > 0){
+    //         dept.val(local.getItem('deptTitle'));
+    //     }
+    // });
+</script>
+<script>
+    let vue = new Vue({
+        el: '#app',
+        data: {
+            items: {},
+            selected: 1,
+            keyword: '',
+            groups: {},
+            researches: {},
+            group_select: 3,
+            research_select: 4
+        },
+        created: function () {
+            this.initItems(1, 5);
+        },
+        computed: {
+            itemsFilter: function(){
+                let items2 = JSON.parse(JSON.stringify(this.items));
+                if (items2.length) {
+                    let flag = this.selected;
+                    let it = items2.filter(function (item) {
+                        return item.ustatus === flag;
+                    });
+                    // this.pageTotal = it.length;
+                    // console.log('-------------------------');
+                    // console.log(it.length);
+                    // console.log('-------------------------');
+                    this.getPageList(this.curr, this.limit, 11);
+                    return it;
+                }
+            }
+        },
+        methods: {
+            //初始化数据
+            initItems: function(curr, limit){
+                axios.get('/user/userList', {params:{
+                        'curr': curr,
+                        'limit': limit,
+                        'keyword': $("#keyword").val(),
+                        'status': this.selected,
+                        'group_select': this.group_select,
+                        'research_select': this.research_select
+                    }
+                }).then(res => {
+                    console.log(res.data);
+                    this.items = res.data.data.rows;
+                    this.getPageList(curr, limit, res.data.data.total);
+                });
+                axios.get('/user-group/userGroupList').then(res => {
+                    this.groups = res.data.data
+                });
+                axios.get('/user-research/userResearchList').then(res => {
+                    this.researches = res.data.data
+                });
+            },
+            getPageList(curr, limit, count) {
+                const _this = this;
+                //分页方法
+                layui.use(['laypage', 'layer'], function () {
+                    const laypage = layui.laypage
+                        , layer = layui.layer;
+                    //完整功能
+                    laypage.render({
+                        elem: 'page',
+                        count: count || 0,
+                        theme: '#009587',
+                        limit: limit || 3,
+                        limits: [5, 10, 20, 30, 40],
+                        curr: curr || 1,
+                        layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip'],
+                        jump: (obj, first) => {
+                            // console.log(obj);
+                            if (!first) {
+                                _this.initItems(obj.curr, obj.limit);
+                                // _this.limit = obj.limit;
+                            }
+                        }
+                    });
+                });
+            },
+            selectChange: function(){
+                this.initItems(1, 5)
+            }
+        }
+    });
+</script>
+</body>
+</html>

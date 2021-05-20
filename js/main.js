@@ -4,6 +4,7 @@ layui.use(['element', 'form', 'layer', 'upload'], function () {
     var form = layui.form; //加载form模块
     var layer = layui.layer; //加载layer模块
     var upload = layui.upload;  //加载upload模块
+    baseURL = "http://localhost:8081";
 
     /* 侧边栏开关 */
     $(".side-toggle").on("click", function (e) {
@@ -151,7 +152,10 @@ layui.use(['element', 'form', 'layer', 'upload'], function () {
                 title: '提示',
                 btn: ['确认', '取消']
             }, function () {
-                $.get(e.target.href, function (result) {
+                // 获取href
+                let n = e.target.href.indexOf('/', 10);
+                let href = e.target.href.substring(n);
+                $.get(baseURL+href, function (result) {
                     $.Messager(result);
                 });
             });
@@ -165,13 +169,17 @@ layui.use(['element', 'form', 'layer', 'upload'], function () {
     // post方式异步-操作状态
     $(".ajax-status").on("click", function (e) {
         e.preventDefault();
+        // e.stopPropagation();
         var checked = [];
         var tdcheckbox = $(".timo-table td .timo-checkbox :checkbox:checked");
         if (tdcheckbox.length > 0) {
             tdcheckbox.each(function (key, val) {
                 checked.push("ids=" + $(val).attr("value"));
             });
-            $.post(e.target.href, checked.join("&"), function (result) {
+            // 获取href
+            let n = e.target.href.indexOf('/', 10);
+            let href = e.target.href.substring(n);
+            $.post(baseURL + href, checked.join("&"), function (result) {
                 $.Messager(result);
             });
         } else {
@@ -183,6 +191,9 @@ layui.use(['element', 'form', 'layer', 'upload'], function () {
     $(document).on("click", ".open-popup, .open-popup-param", function () {
         var title = $(this).data("title");
         var url = $(this).attr("data-url");
+        console.log('-----------------------');
+        // console.log($(this).data("msg");
+        console.log('-----------------------');
         if ($(this).hasClass("open-popup-param")) {
             var tdcheckbox = $(".timo-table td .timo-checkbox :checkbox:checked");
             var param = '';

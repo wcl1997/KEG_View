@@ -2,7 +2,7 @@
 <head>
     <title>KEG实验室管理系统</title>
     <meta charset="utf-8">
-    <link rel="shortcut icon" th:href="./images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -119,8 +119,12 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in items" :key="item.id">
-                        <td><label class="timo-checkbox"><input type="checkbox" value="1">
-                            <i class="layui-icon layui-icon-ok"></i></label></td>
+                        <td>
+                            <label class="timo-checkbox">
+                                <input type="checkbox" :value="item.id">
+                                <i class="layui-icon layui-icon-ok"></i>
+                            </label>
+                        </td>
                         <td>{{item.uname}}</td>
                         <td>{{item.uusername}}</td>
                         <td>{{item.uid}}</td>
@@ -133,9 +137,9 @@
                         <td>{{item.research.rname}}</td>
                         <td>{{item.utrait}}</td>
                         <td>
-                            <a class="open-popup" data-title="编辑用户" data-size="600,570" href="#" data-url="edit.html">编辑</a>
+                            <a class="open-popup" data-title="编辑用户" data-size="600,570" :data-msg="''+item" data-url="popup.html">编辑</a>
                             <!-- <a class="open-popup" data-title="详细信息" data-size="800,600" href="#" data-url="404.html">详细</a> -->
-                            <a class="ajax-get" href="/user/status/delete?ids=1" data-msg="您是否删除此信息">删除</a>
+                            <a class="ajax-get" :href="'/user/status/delete?ids=' + item.id" data-msg="您是否删除此数据">删除</a>
                         </td>
                     </tr>
                 </tbody>
@@ -179,7 +183,7 @@
             groups: {},
             researches: {},
             group_select: 3,
-            research_select: 4
+            research_select: 4,
         },
         created: function () {
             this.initItems(1, 5);
@@ -213,7 +217,7 @@
                         'research_select': this.research_select
                     }
                 }).then(res => {
-                    console.log(res.data);
+                    // console.log(res.data.data.rows);
                     this.items = res.data.data.rows;
                     this.getPageList(curr, limit, res.data.data.total);
                 });
@@ -251,7 +255,10 @@
             },
             selectChange: function(){
                 this.initItems(1, 5)
-            }
+            },
+            // editUser: function (item) {
+            //     console.log(item);
+            // }
         }
     });
 </script>
